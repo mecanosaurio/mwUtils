@@ -214,10 +214,18 @@ void blinkEvent(int blinkStrength) {
                     int low_gamma_level, int mid_gamma_level) {
 }*/
 
-public void eegEvent(int delta_level, int theta_level, 
-                    int low_alpha_level, int high_alpha_level, 
-                    int low_beta_level, int high_beta_level, 
-                    int low_gamma_level, int mid_gamma_level) {
+public void eegEvent(int _delta, int _theta, 
+                    int _low_alpha, int _high_alpha, 
+                    int _low_beta, int _high_beta, 
+                    int _low_gamma, int _mid_gamma) {
+  delta_level = _delta;
+  theta_level = _theta;
+  low_alpha_level = _low_alpha;
+  high_alpha_level = _high_alpha;
+  low_beta_level = _low_beta;
+  high_beta_level = _high_beta;
+  low_gamma_level = _low_gamma;
+  mid_gamma_level = _mid_gamma;
   updateChannels();
   sendChannels();
 }
