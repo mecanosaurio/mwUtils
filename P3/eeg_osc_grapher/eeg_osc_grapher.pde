@@ -1,11 +1,12 @@
 /*
-*190809.mindGraph
+*190812.mindGraph
 *-----------------
 * catches eeg-wave signals from thinkgearConnector
 * channel per signal
 * plots
 * sendable osc 
-* normalizable and scalable values 
+* normalizable and scalable values
+* + stores register on csv file
 */
 
 import neurosky.*;
@@ -32,9 +33,12 @@ int att_level, med_level, blink_level;
 
 boolean newBlink, newMed, newAtt;
 
+int nChans = 11;
 boolean[] isSending = new boolean[11];
 boolean[] isNorm = new boolean[11];
 int[] mult = new int[11];
+
+PrintWriter fOut; 
 
 
 
@@ -166,6 +170,29 @@ void mousePressed(){
 
 
 
+void keyPressed(){
+  if (key=='r' || key =='R'){
+    int nDats = channels[0].points.size();
+    String filename = nf(year(),2)+nf(month(), 2)+ nf(day(), 2) + nf(hour(), 2) + nf(minute(), 2) + nf(second(),2);
+    fOut = createWriter(filename+".csv");
+    fOut.println("timestamp,blink,attention,meditation,delta,theta,low_alpha,high_alpha,low_beta,high_beta,low_gamma,mid_gamma");
+    for (int i=0; i<nDats; i++){
+      fOut.print(channels[0].points.get(i).time);
+      fOut.print(",");
+      for (int j=0; j<nChans; j++){
+        fOut.print(nf(channels[j].points.get(i).value));
+        fOut.print(",");
+      }
+      fOut.println();
+    }
+    fOut.flush();
+    fOut.close();
+  }
+}
+
+
+
+
 void poorSignalEvent(int sig) {
   println("pSignalEvent "+sig);
 }
@@ -207,12 +234,6 @@ void blinkEvent(int blinkStrength) {
   newBlink = true;
 }
 
-
-/*public void eegEvent(int delta_level, int theta_level, 
-                    int low_alpha_level, int high_alpha_level, 
-                    int low_beta_level, int high_beta_level, 
-                    int low_gamma_level, int mid_gamma_level) {
-}*/
 
 public void eegEvent(int _delta, int _theta, 
                     int _low_alpha, int _high_alpha, 
